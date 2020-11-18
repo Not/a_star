@@ -3,7 +3,7 @@
 
 
 
-    #define DEBUG
+    //#define DEBUG
     #ifdef DEBUG
     #define DEBUG_MSG(str) std::cout << str
     #else

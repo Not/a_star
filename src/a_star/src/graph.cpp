@@ -70,16 +70,24 @@ void Graph::loadFromFile(std::string filename, Graph::graph_representation rep)
          }
     }
     else{
-        //DEBUG_MSG("ERROR file open: "<<file.rdstate());
+        DEBUG_MSG("ERROR file open: "<<file.rdstate());
         exit(1);
 
     }
 }
 
-void Graph::computeDistances()
+void Graph::computeDistances(norm Norm)
 {
+
     for(auto &n:nodes){
-        n.distance=n.coordinates.getDistance(endNode->coordinates);
+        switch(Norm){
+            case norm::Euler:
+                n.distance=n.coordinates.getDistance(endNode->coordinates);
+            break;
+            case norm::Zero:
+                n.distance=0;
+            break;
+        }
     }
 
 }

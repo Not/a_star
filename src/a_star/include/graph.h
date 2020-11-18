@@ -17,12 +17,16 @@ public:
         AdjMatrix,
         AdjList,
     };
+    enum norm{
+        Euler,
+        Zero
+    };
 
 
     explicit Graph();
     size_t size();
     void loadFromFile(std::string filename,graph_representation rep);
-    void computeDistances();
+    void computeDistances(norm Norm=norm::Euler);
     friend const std::ostream& operator<<(std::ostream&, const Graph&);
     void addNode(Node n,std::map<size_t,std::pair<double,double>> weights);
     std::vector<Node> nodes;

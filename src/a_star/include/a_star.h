@@ -26,15 +26,10 @@ private:
 
     struct cmp{
         bool operator()(const Node* n1,const Node* n2){
-            //if (mode==a_star_mode::dijkstra){zrób coś}
             return (n1->distance+n1->g < n2->distance+n2->g);
         }
     };    
     
-
-
-    //static std::function<bool(const Node*,const Node*)> cmp;
-    //std::priority_queue< const Node*,std::vector<const Node*>,decltype(cmp)> queue{cmp};
 
     priorityQueueSet<Node*,cmp> queue;
     std::vector<int> thru;
