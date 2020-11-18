@@ -1,2 +1,5 @@
-# a_star
+# A*
 Implementacja algorytmu A* na przedmiot NMSI
+---------------
+##Użycie
+
