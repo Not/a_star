@@ -10,6 +10,7 @@
 class plot_nodes{
 public: 
 cv::Size PlotSize;
+double min_x,max_x,min_y,max_y;
 int unitSize;
 const Graph * graph;
 cv::Mat *canvas;

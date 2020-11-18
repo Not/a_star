@@ -10,10 +10,13 @@
 
 plot_nodes::plot_nodes(const Graph *g,int unitSize_):graph(g),unitSize(unitSize_)
 {
-    //dsfd
-    auto width=std::max_element(g->nodes.begin(),g->nodes.end(),[](const auto &n1, const auto &n2){return n1.coordinates.x<n2.coordinates.x;})->coordinates.x;
-    auto height=std::max_element(g->nodes.begin(),g->nodes.end(),[](const auto &n1, const auto &n2){return n1.coordinates.y<n2.coordinates.y;})->coordinates.y;    
-    PlotSize=cv::Size(width*unitSize+unitSize,height*unitSize+unitSize);
+    //
+    min_x=std::min_element(g->nodes.begin(),g->nodes.end(),[](const auto &n1, const auto &n2){return n1.coordinates.x<n2.coordinates.x;})->coordinates.x;
+    max_x=std::max_element(g->nodes.begin(),g->nodes.end(),[](const auto &n1, const auto &n2){return n1.coordinates.x<n2.coordinates.x;})->coordinates.x;
+    min_y=std::min_element(g->nodes.begin(),g->nodes.end(),[](const auto &n1, const auto &n2){return n1.coordinates.y<n2.coordinates.y;})->coordinates.y;    
+    max_y=std::max_element(g->nodes.begin(),g->nodes.end(),[](const auto &n1, const auto &n2){return n1.coordinates.y<n2.coordinates.y;})->coordinates.y;    
+    
+    PlotSize=cv::Size((max_x-min_x)*unitSize+2*unitSize,(max_y-min_y)*unitSize+2*unitSize);
     canvas=new cv::Mat(PlotSize,CV_8UC3,cv::Scalar(255,255,255));
 }
 plot_nodes::~plot_nodes(){
@@ -24,10 +27,10 @@ void plot_nodes::draw_nodes(){
     std::stringstream ss;
     ss<<std::setprecision(2);
     for(auto &node: graph->nodes){
-        auto center=cv::Point(node.coordinates.x*unitSize,node.coordinates.y*unitSize);
+        auto center=(cv::Point(node.coordinates.x,node.coordinates.y)-cv::Point((min_x-1),(min_y-1)))*unitSize;
         for(auto nghb:node.edges)
         {
-            auto nghb_center=cv::Point(nghb.first->coordinates.x*unitSize,nghb.first->coordinates.y*unitSize);
+            auto nghb_center=(cv::Point(nghb.first->coordinates.x,nghb.first->coordinates.y)-cv::Point((min_x-1),(min_y-1)))*unitSize;;
             cv::line(*canvas,center,nghb_center,cv::Scalar(100,100,100),1);
             auto TEXT = std::to_string(static_cast<int>(nghb.second));
             auto text_pos=center+(nghb_center-center)/3*scale;//-cv::Point2i(text_size.width/2,-text_size.height/2);
@@ -39,13 +42,13 @@ void plot_nodes::draw_nodes(){
     for(auto &node: graph->nodes){
         
        
-        auto center=cv::Point(node.coordinates.x*unitSize,node.coordinates.y*unitSize);
+        auto center=(cv::Point(node.coordinates.x,node.coordinates.y)-cv::Point((min_x-1),(min_y-1)))*unitSize;
         cv::circle(*canvas,center,radius,cv::Scalar(200,200,200),-1);
         cv::circle(*canvas,center,radius,cv::Scalar(0,150,0),3);
 
        
         auto text_pos=center+cv::Point2i(0,-radius*0.7);
-        puttext(node.name,text_pos,2,0.8*scale,1.5*scale,cv::Scalar(0,150,0));
+        puttext(std::to_string(node.index+1),text_pos,2,0.8*scale,1.5*scale,cv::Scalar(0,150,0));
         ss<<"h:"<<node.distance;
         text_pos=center+cv::Point2i(0,-radius*0.3);
         puttext(ss.str(),text_pos,2,0.5*scale,1*scale,cv::Scalar(0,0,200));
@@ -59,10 +62,10 @@ void plot_nodes::draw_nodes(){
         ss.clear();
 
     }
-    auto center=cv::Point(graph->startNode->coordinates.x*unitSize,graph->startNode->coordinates.y*unitSize);
+    auto center=(cv::Point(graph->startNode->coordinates.x,graph->startNode->coordinates.y)-cv::Point((min_x-1),(min_y-1)))*unitSize;
     cv::circle(*canvas,center,radius,cv::Scalar(255,0,0),4*scale);
 
-    center=cv::Point(graph->endNode->coordinates.x*unitSize,graph->endNode->coordinates.y*unitSize);
+    center=(cv::Point(graph->endNode->coordinates.x,graph->endNode->coordinates.y)-cv::Point((min_x-1),(min_y-1)))*unitSize;
     cv::circle(*canvas,center,radius,cv::Scalar(0,0,255),4*scale);
 
     cv::imshow("okno",*canvas);
@@ -75,8 +78,8 @@ void plot_nodes::draw_path(std::list<Node*> path){
     auto prevNode=path.front();
 
     for (std::list<Node*>::const_iterator it = ++path.begin(); it != path.end(); ++it){
-        auto center1=cv::Point(prevNode->coordinates.x*unitSize,prevNode->coordinates.y*unitSize);
-        auto center2=cv::Point((*it)->coordinates.x*unitSize,(*it)->coordinates.y*unitSize);
+        auto center1=(cv::Point(prevNode->coordinates.x,prevNode->coordinates.y)-cv::Point((min_x-1),(min_y-1)))*unitSize;
+        auto center2=(cv::Point((*it)->coordinates.x,(*it)->coordinates.y)-cv::Point((min_x-1),(min_y-1)))*unitSize;
         prevNode=(*it);
         
         cv::line(*canvas,center1,center2,cv::Scalar(255,0,255),5);

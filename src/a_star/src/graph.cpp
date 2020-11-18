@@ -4,6 +4,7 @@
 #include <regex>
 #include "point.h"
 #include <map>
+#define DEBUG
 #include "debug.h"
 
 Graph::Graph()
