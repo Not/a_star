@@ -14,7 +14,7 @@ A_Star::A_Star(Graph &g,a_star_mode mode_):graf(g),thru(g.size(),-1),mode(mode_)
 
 }
 
-void A_Star::operator()()
+bool A_Star::operator()()
 {
    if(mode==a_star_mode::simple) DEBUG_MSG("Simple"<<std::endl);
    if(mode==a_star_mode::full) DEBUG_MSG("FULL");
@@ -32,7 +32,7 @@ void A_Star::operator()()
 
        if(current_node==graf.endNode){ //jeśli koniec to koniec
            DEBUG_MSG("END");
-           return;
+           return true;
        }
        visited.insert(current_node); //dodanie do listy odwiedzonych, w full niepotrzebne ale co mi tam
        
@@ -53,6 +53,8 @@ void A_Star::operator()()
        }
    }
    DEBUG_MSG("FAIL?");
+   std::cout<<"brak";
+   return false;
 }
 std::list<Node*> A_Star::create_path(){ //odtworzenie drogi na podstawie wektora thru
     auto index=graf.endNode->index;

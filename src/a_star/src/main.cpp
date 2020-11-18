@@ -19,22 +19,31 @@
 
 using namespace std;
 
-int main()
+int main(int argc, char**argv)
 {
    
+   string filename=R"(graf.txt)";
+
+    if(argc<2){
+        DEBUG_MSG("Waring, filename not provided, assumed 'graf.txt'"<<std::endl);
+    }
+    else{
+        filename=argv[1];
+        DEBUG_MSG(filename);
+    }
+
     Graph graf;
-    graf.loadFromFile(R"(graf.txt)",Graph::graph_representation::AdjMatrix); //wczytanie struktury grafu, położeń węzłów oraz krawędzi. Można wybrać sposób zapisu danych (TODO)
+    graf.loadFromFile(filename,Graph::graph_representation::AdjMatrix); //wczytanie struktury grafu, położeń węzłów oraz krawędzi. Można wybrać sposób zapisu danych (TODO)
    
     //graf.addNode(Node(Point(4,0),"new1"),{ {8,{1,1}},{9,{2,3}} }); //dodawanie kolejnych wezłów w razie potrzeby
     //należy podać węzeł oraz listę zawierającą połączenia z innymi węzłami na podstawie indeksów oraz 2x double:  wagę połączenia z nowego węzła oraz do niego
-    
-
+  
     //Utworzenie obiektu przeszukiwania
     A_Star search(graf,A_Star::a_star_mode::full);
     //do wyboru tryb full, simple oraz dijkstra
      DEBUG_MSG(graf);
     //Uruchomienie algorytmu:
-    search();
+    if(!search()) return -1;
 
     //Wyliczenie ścieżki start -> end:
     auto path=search.create_path();

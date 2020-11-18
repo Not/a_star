@@ -18,7 +18,7 @@ public:
     }mode;
     int test;
     A_Star(Graph &g,a_star_mode mode=a_star_mode::full);
-    void operator()();
+    bool operator()();
     std::list<Node*> create_path();
 private:
     Graph &graf;
