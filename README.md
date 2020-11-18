@@ -1,6 +1,6 @@
 # A*
 Implementacja algorytmu A* na przedmiot NMSI
-##Użycie
+Użycie
 -------
 Po zbudowaniu uruchomić program z parametrami: 
 main filename mode
